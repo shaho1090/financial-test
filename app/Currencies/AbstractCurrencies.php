@@ -12,11 +12,11 @@ abstract class AbstractCurrencies
 {
     protected array $rates = [];
 
-    protected array $base = [];
+    protected string $base;
 
     private string $exchangeRateURL = '';
 
-    public function getBase(): array
+    public function getBase(): string
     {
         return $this->base;
     }
@@ -30,20 +30,12 @@ abstract class AbstractCurrencies
     }
 
     /**
-     * @return array
-     */
-    public function getAll(): array
-    {
-        return array_merge($this->getBase(), $this->getRates());
-    }
-
-    /**
      * @param string $currency
      * @return bool
      */
-    public function check(string $currency): bool
+    public function checkIfExist(string $currency): bool
     {
-        return array_key_exists($currency, $this->getAll());
+        return array_key_exists($currency, $this->getRates());
     }
 
     /**
@@ -73,7 +65,7 @@ abstract class AbstractCurrencies
      */
     public function getRateFor($currency)
     {
-        if (!$this->check($currency)) {
+        if (!$this->checkIfExist($currency)) {
             throw new CurrencyNotFoundException();
         }
 
@@ -92,5 +84,18 @@ abstract class AbstractCurrencies
         }
 
         $this->exchangeRateURL = $url;
+    }
+
+    public function isBase($currency): bool
+    {
+        return $this->base == $currency;
+    }
+
+    /**
+     * @throws CurrencyNotFoundException
+     */
+    public function calculateAmountFor($currency, $amount)
+    {
+        return $amount / $this->getRateFor($currency);
     }
 }
