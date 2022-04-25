@@ -13,6 +13,7 @@ class Currencies extends AbstractCurrencies
      * @var string[]
      */
     protected array $rates = [
+        'EUR' => 1,
         'USD' => 1.1497,
         'JPY' => 129.53
     ];
@@ -20,9 +21,6 @@ class Currencies extends AbstractCurrencies
     /**
      * The base currency we use fo exchanging
      *
-     * @var array
      */
-    protected array $base = [
-        'EUR' => 1
-    ];
+    protected string $base = 'EUR';
 }
