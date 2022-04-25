@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 
-use App\CommissionFee\Calculator;
+use App\CommissionFee\UserOperationFactory;
 use App\CommissionFee\ClientTypes\BusinessType;
 use App\CommissionFee\ClientTypes\PrivateType;
 use App\CommissionFee\Operations\Deposit;
@@ -25,45 +25,10 @@ class CalculationTest extends TestCase
      */
     public function test_calculation_data()
     {
-
         $inputFile = Storage::disk('local')->path('data.csv');
 
         $raws = (new CSVFile($inputFile))->handle()->getArray();
 
-        (new Calculator($raws))->handle();
-
-        dd();
-
-        dump($response);
-        dd();
-
-        dd($data = fgetcsv($inputFile, 1000, ","));
-
-        $currencies = (new Currencies())->setOnlineRates();
-
-        dd($currencies->getRateFor('USD'));
-        dd($currencies->getRateFor('SCR'));
-        dd($currencies->getRateFor('SCR'));
-        dump((new Currencies())->getAll());
-        dump((new Currencies())->getBase());
-        dd((new Currencies())->getRates());
-
-        dd($inputFile);
-
+        (new UserOperationFactory($raws))->handle();
     }
-
-    public function setUserIdAsKey($array)
-    {
-        $data = [
-
-        ];
-
-        array_filter($array, array_walk($array, function ($value, $key) {
-            if ($key == 'user_id') {
-                return $value;
-            }
-        }));
-    }
-
-
 }
